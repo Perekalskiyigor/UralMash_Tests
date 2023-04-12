@@ -1,0 +1,20 @@
+import unittest
+
+class TestCountLetters(unittest.TestCase):
+    def test_empty_string(self):
+        self.assertEqual(count_letters(''), '')
+
+    def test_single_letter(self):
+        self.assertEqual(count_letters('a'), '1a')
+
+    def test_all_same_letters(self):
+        self.assertEqual(count_letters('aaa'), '3a')
+
+    def test_multiple_groups_of_same_letters(self):
+        self.assertEqual(count_letters('aaabbccc'), '3a2b3c')
+
+    def test_mixed_case(self):
+        self.assertEqual(count_letters('AaaBBBccc'), '1A2a3B3c')
+
+if __name__ == '__main__':
+    unittest.main()
