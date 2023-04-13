@@ -18,6 +18,13 @@ class MyWindow(QMainWindow):
         self.result_label = QLabel(self)
         self.result_label.move(20, 100)
 
+        self.result_label1 = QLabel(self)
+        self.result_label1.move(20, 110)
+
+        self.result_label2 = QLabel(self)
+        self.result_label2.move(20, 130)
+
+    
         # подключаем обработчик нажатия кнопки
         self.button.clicked.connect(self.execute_query)
 
@@ -32,24 +39,44 @@ class MyWindow(QMainWindow):
         # создаем курсор для выполнения SQL-запросов
         cursor = self.conn.cursor()
 
-        cursor.execute('''CREATE TABLE IF NOT EXISTS test_table
-                (data TEXT)''')
+        # cursor.execute('''CREATE TABLE IF NOT EXISTS test_table
+        #         (data TEXT)''')
         
-        # наполняем таблицу данными
-        data = [('gsregtgs',), ('tgergegeer',), ('gregeg',)]
-        cursor.executemany('INSERT INTO test_table VALUES (?)', data)
+        # # наполняем таблицу данными
+        # data = [('gsregtgs',), ('tgergegeer',), ('gregeg',)]
+        # cursor.executemany('INSERT INTO test_table VALUES (?)', data)
 
         # выполняем запрос
-        cursor.execute("SELECT * FROM test_table WHERE data=?", (data,))
+        # cursor.execute("SELECT * FROM test_table WHERE text_field=?", (data,))
+        """Для подсчета количества вхождений символа можно использовать следующий SQL-запрос:"""
+        cursor.execute(f"SELECT text_field,LENGTH(text_field) - LENGTH(REPLACE(text_field, '{data}', '')) AS count FROM test_table;")
 
         # получаем результат запроса
         result = cursor.fetchall()
+        second_elements = [t[1] for t in result]
+        sumelements = sum(second_elements)
+        print (sumelements)
+        #print(result)
 
         # отображаем результат на экране
         if result:
-            self.result_label.setText('Результат: ' + str(result))
+            self.result_label1.setText('символов: ' + str(sumelements))
         else:
-            self.result_label.setText('Результат не найден')
+            self.result_label1.setText('Вхождений не найдено')
+
+        """Для подсчета количества вхождений подстроки"""
+        cursor.execute(f"SELECT COUNT(*) as occurrences FROM test_table WHERE text_field LIKE '%{data}%'")
+
+        # получаем результат запроса
+        result = cursor.fetchall()
+        second_elements = result[0]
+        second_elements = second_elements[0]
+
+        # отображаем результат на экране
+        if result:
+            self.result_label2.setText('подстроки: ' + str(second_elements))
+        else:
+            self.result_label2.setText('Вхождений не найдено')
 
     def closeEvent(self, event):
         # закрываем соединение с базой данных при закрытии окна
