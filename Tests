@@ -1,5 +1,28 @@
 import unittest
 
+def count_letters(s):
+        # Получаем введенный текст из поля ввода
+        
+        # Создаем список для хранения подсчитанных букв и их количества
+        counts = []
+        # Инициализируем переменную для подсчета количества текущей буквы
+        current_count = 1
+        # Проходим по всем символам в строке
+        for i in range(1, len(s)):
+            # Если текущий символ равен предыдущему, увеличиваем счетчик текущей буквы
+            if s[i] == s[i-1]:
+                current_count += 1
+            # Если текущий символ отличается от предыдущего, добавляем предыдущую букву и ее количество в список counts
+            else:
+                counts.append(str(current_count) + s[i-1])
+                current_count = 1
+        # Добавляем последнюю букву и ее количество в список counts
+        counts.append(str(current_count) + s[-1])
+        
+        # Выводим результаты подсчета в формате "количество буквы"
+        print(''.join(counts))
+
+
 class TestCountLetters(unittest.TestCase):
     def test_empty_string(self):
         self.assertEqual(count_letters(''), '')
