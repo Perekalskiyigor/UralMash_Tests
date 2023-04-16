@@ -7,17 +7,17 @@ class MainWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        # Создаем виджеты
+        
         self.label = QLabel('Введите список одинаковых букв:')
         self.input = QLineEdit()
         self.output_label = QLabel('Результат: ')
         self.output = QLabel()
         self.button = QPushButton('Подсчитать')
         
-        # Связываем событие нажатия кнопки с обработчиком
+        # Обработчики
         self.button.clicked.connect(self.count_letters)
         
-        # Создаем макет и добавляем виджеты
+        # Группировка
         vbox = QVBoxLayout()
         vbox.addWidget(self.label)
         vbox.addWidget(self.input)
@@ -25,35 +25,38 @@ class MainWindow(QWidget):
         vbox.addWidget(self.output_label)
         vbox.addWidget(self.output)
         
-        # Устанавливаем макет
+        # Макет
         self.setLayout(vbox)
         
-        # Устанавливаем размеры и заголовок окна
+        # Размеры и заголовок окна
         self.setGeometry(100, 100, 300, 150)
         self.setWindowTitle('Подсчет букв')
 
     def count_letters(self):
+        """Обработчик кнопки"""
         # Получаем введенный текст из поля ввода
         s = self.input.text()
-        
-        # Создаем список для хранения подсчитанных букв и их количества
-        counts = []
-        # Инициализируем переменную для подсчета количества текущей буквы
-        current_count = 1
-        # Проходим по всем символам в строке
-        for i in range(1, len(s)):
-            # Если текущий символ равен предыдущему, увеличиваем счетчик текущей буквы
-            if s[i] == s[i-1]:
-                current_count += 1
-            # Если текущий символ отличается от предыдущего, добавляем предыдущую букву и ее количество в список counts
+        symbol = ""
+        count = 0
+        output = ""
+        for i in s:
+            try:
+                int(i)
+            except ValueError:
+                if symbol == "" or symbol == i:
+                    symbol = i
+                    count += 1
+                else:
+                    output += symbol + str(count)
+                    count = 1
+                    symbol = i
             else:
-                counts.append(str(current_count) + s[i-1])
-                current_count = 1
-        # Добавляем последнюю букву и ее количество в список counts
-        counts.append(str(current_count) + s[-1])
+                print("Числа не подлежат обработки")
+                quit()
+        output += symbol + str(count)
         
         # Выводим результаты подсчета в формате "количество буквы"
-        self.output.setText(''.join(counts))
+        self.output.setText(output)
 
 if __name__ == '__main__':
     # Создаем приложение
